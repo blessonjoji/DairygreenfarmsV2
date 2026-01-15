@@ -275,6 +275,15 @@
             transform: scale(0.9);
             animation: zoomIn 0.3s ease forwards;
         }
+
+        /* --- MOBILE MENU ANIMATION --- */
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -291,6 +300,7 @@
                 <span class="text-2xl font-bold tracking-tight text-green-900 serif">Dairy Green <span class="font-normal italic text-green-700 text-lg">Farms</span></span>
             </div>
             
+            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center space-x-10 text-sm font-semibold uppercase tracking-widest text-green-900">
                 <a href="#home" class="hover:text-green-600 transition">Home</a>
                 <a href="#products" class="hover:text-green-600 transition">Our Harvest</a>
@@ -299,9 +309,19 @@
                 <a href="#contact" class="hover:text-green-600 transition">Contact</a>
             </div>
 
-            <button class="md:hidden text-green-900">
+            <!-- Hamburger Button -->
+            <button class="md:hidden text-green-900 focus:outline-none" onclick="toggleMobileMenu()">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
+        </div>
+
+        <!-- Mobile Menu Container (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-white border-b border-green-100 shadow-lg flex flex-col p-6 space-y-4">
+            <a href="#home" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Home</a>
+            <a href="#products" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Our Harvest</a>
+            <a href="#about" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Our Roots</a>
+            <a href="#gallery" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Gallery</a>
+            <a href="#contact" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Contact</a>
         </div>
     </nav>
 
@@ -684,6 +704,13 @@
 
         function closeProductModal() {
             document.getElementById('product-modal').style.display = 'none';
+        }
+
+        // --- MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('mobile-menu-enter');
         }
 
         // --- LIGHTBOX LOGIC (Restored) ---
