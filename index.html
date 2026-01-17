@@ -52,10 +52,10 @@
             gap: 30px;
             overflow-x: auto;
             scroll-behavior: smooth;
-            scrollbar-width: none; /* Firefox */
+            /* scrollbar-width: none; handled by utility */
             padding: 20px 50px;
         }
-        .carousel-track::-webkit-scrollbar { display: none; }
+        /* .carousel-track::-webkit-scrollbar { display: none; } handled by utility */
 
         .carousel-item {
             flex: 0 0 280px;
@@ -68,6 +68,7 @@
             transition: transform 0.3s ease, border-color 0.3s ease;
             cursor: pointer;
             position: relative;
+            scroll-snap-align: center; /* Added for snapping */
         }
         
         .carousel-item:focus, .carousel-item:hover {
@@ -442,11 +443,11 @@
                 <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Explore our range. Click on any item to view available varieties.</p>
             </div>
             
-            <div class="carousel-container max-w-7xl mx-auto" onmouseenter="pauseScroll()" onmouseleave="resumeScroll()">
-                <button class="nav-arrow nav-prev" onclick="scrollCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
-                <button class="nav-arrow nav-next" onclick="scrollCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="carousel-container max-w-7xl mx-auto" onmouseenter="pauseProductAutoPlay()" onmouseleave="startProductAutoPlay()">
+                <button class="nav-arrow nav-prev" onclick="scrollProductCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-arrow nav-next" onclick="scrollProductCarousel(1)"><i class="fas fa-chevron-right"></i></button>
                 
-                <div class="carousel-track" id="productTrack">
+                <div class="carousel-track snap-x snap-mandatory scrollbar-hide" id="productTrack">
                     <!-- Milk -->
                     <div class="carousel-item" onclick="openProductModal('milk')">
                         <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-700"><i class="fas fa-tint text-2xl"></i></div>
@@ -475,7 +476,9 @@
                         <p class="text-gray-500 text-sm mt-2">Seasonal</p>
                     </div>
 
-                    </div>
+                </div>
+                <!-- Product Dots -->
+                <div id="product-dots" class="flex justify-center gap-2 mt-6"></div>
             </div>
         </section>
 
@@ -801,53 +804,49 @@
             }
         };
 
-        // --- CONTINUOUS CAROUSEL LOGIC ---
-        const track = document.getElementById('productTrack');
-        let autoScroll;
-        // Width of one set of items (calculated dynamically)
-        let setWidth = 0; 
-
-        function setupInfiniteScroll() {
-            if (!track) return;
-            const items = Array.from(track.children);
-            if(items.length === 0) return;
-
-            // Calculate width: (ItemWidth + Gap) * Count
-            // CSS defines gap: 30px, flex: 0 0 280px
-            const itemWidth = 280; 
-            const gap = 30;
-            setWidth = items.length * (itemWidth + gap);
-
-            // Clone items
-            items.forEach(item => {
-                const clone = item.cloneNode(true);
-                // Ensure the click event works on clones (onclick attribute is copied)
-                track.appendChild(clone);
-            });
+        // --- CAROUSEL LOGIC (Products) ---
+        let productAutoPlayInterval;
+        
+        function setupProductCarousel() {
+            // Setup dots for products with a gap of 30px
+            setupDots('productTrack', 'product-dots', 30);
+            startProductAutoPlay();
         }
 
-        function startAutoScroll() {
-            clearInterval(autoScroll); // Safety clear
-            autoScroll = setInterval(() => {
-                if (!track) return;
-                
-                track.scrollLeft += 1;
+        function startProductAutoPlay() {
+            clearInterval(productAutoPlayInterval);
+            productAutoPlayInterval = setInterval(() => {
+                scrollProductCarousel(1, true); // true = triggered by auto-play
+            }, 3000); // 3 seconds per slide
+        }
 
-                // Infinite Loop Reset
-                // If we have scrolled past the first set, subtract that set's width
-                // to snap back to the start of the "real" content (which looks identical)
-                if (track.scrollLeft >= setWidth) {
-                    track.scrollLeft -= setWidth;
+        function pauseProductAutoPlay() {
+            clearInterval(productAutoPlayInterval);
+        }
+
+        function scrollProductCarousel(direction, isAuto = false) {
+            const track = document.getElementById('productTrack');
+            if(!track) return;
+
+            // Item width 280px + gap 30px = 310px
+            const itemWidth = 310; 
+            const currentScroll = track.scrollLeft;
+            const maxScroll = track.scrollWidth - track.clientWidth;
+            
+            let nextScroll = currentScroll + (direction * itemWidth);
+
+            // Wrap around logic for auto-play
+            if (isAuto && direction === 1) {
+                // Tolerance of 10px to detect end
+                if (currentScroll >= maxScroll - 10) { 
+                    nextScroll = 0;
                 }
-            }, 20);
-        }
+            }
 
-        function pauseScroll() { clearInterval(autoScroll); }
-        function resumeScroll() { startAutoScroll(); }
-
-        function scrollCarousel(direction) {
-            const itemWidth = 320; 
-            track.scrollBy({ left: direction * itemWidth, behavior: 'smooth' });
+            track.scrollTo({
+                left: nextScroll,
+                behavior: 'smooth'
+            });
         }
 
         // --- MODAL LOGIC ---
@@ -883,7 +882,7 @@
             menu.classList.toggle('mobile-menu-enter');
         }
 
-        // --- LIGHTBOX LOGIC (Restored) ---
+        // --- LIGHTBOX LOGIC ---
         function setupLightbox() {
             const galleryImages = document.querySelectorAll(".gallery-img");
             const lightbox = document.getElementById("lightbox");
@@ -997,11 +996,11 @@
         // Random fallback messages for unknown queries
         function getRandomFallback() {
             const fallbacks = [
-                "Moo! I'm resting right now. 🐮",
-                "I'm just a cow, I didn't quite get that! Try asking about milk or visiting hours.",
-                "Moo? I'm busy grazing! Ask me later.",
-                "My ears are twitching, but I'm not sure what you mean! Moo!",
-                "Moo! Connection fuzzy. Maybe try calling us?"
+                "Moo! That is a bit beyond my current knowledge. Please contact the farm directly for more info! 🐮",
+                "I'm still learning! For detailed inquiries, it is best to call or WhatsApp us directly. 📞",
+                "I didn't quite catch that. Please reach out to our team at 9567649770 for a detailed answer.",
+                "I am here to help with basics, but for that query, please contact us via WhatsApp!",
+                "That sounds important! Please give us a call so we can help you better. 📱"
             ];
             return fallbacks[Math.floor(Math.random() * fallbacks.length)];
         }
@@ -1038,8 +1037,7 @@
 
         // Init
         document.addEventListener("DOMContentLoaded", () => {
-            setupInfiniteScroll();
-            startAutoScroll();
+            setupProductCarousel();
             setupLightbox();
             // Call setupDots for all 3 mobile carousels
             setupDots('gallery-scroll-container', 'gallery-dots', 16);
@@ -1048,7 +1046,7 @@
             centerCoreValues();
         });
 
-        // --- MOBILE UX IMPROVEMENTS ---
+        // --- GENERIC DOTS LOGIC ---
         
         function setupDots(containerId, dotsId, gap = 16) {
             const container = document.getElementById(containerId);
@@ -1065,6 +1063,14 @@
             for(let i=0; i<itemCount; i++) {
                 const dot = document.createElement('div');
                 dot.className = `dot ${i===0 ? 'active' : ''}`;
+                // Allow clicking dots to scroll
+                dot.onclick = () => {
+                    const itemWidth = container.children[0].offsetWidth + gap;
+                    container.scrollTo({
+                        left: i * itemWidth,
+                        behavior: 'smooth'
+                    });
+                };
                 dotsContainer.appendChild(dot);
             }
 
@@ -1076,7 +1082,16 @@
                 if (container.children.length === 0) return;
                 
                 const itemWidth = container.children[0].offsetWidth + gap; 
-                const activeIndex = Math.round(scrollLeft / itemWidth);
+                let activeIndex = Math.round(scrollLeft / itemWidth);
+                
+                // FIX: Check if we are at the very end of the scroll container
+                // This ensures the last dot lights up when we can't scroll any further
+                // even if the last item isn't all the way to the left (common on desktop)
+                const isAtEnd = Math.abs((container.scrollWidth - container.clientWidth) - scrollLeft) < 10;
+                
+                if (isAtEnd) {
+                   activeIndex = dotsContainer.children.length - 1;
+                }
                 
                 const dots = dotsContainer.children;
                 for(let i=0; i<dots.length; i++) {
