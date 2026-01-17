@@ -477,8 +477,7 @@
                     </div>
 
                 </div>
-                <!-- Product Dots -->
-                <div id="product-dots" class="flex justify-center gap-2 mt-6"></div>
+                <!-- Dots removed as per request to keep it clean -->
             </div>
         </section>
 
@@ -808,30 +807,15 @@
         let productAutoPlayInterval;
         
         function setupProductCarousel() {
-            // Initial setup based on current screen size
-            updateProductCarouselConfig();
-            
-            // Update behavior when screen size changes
-            window.addEventListener('resize', () => {
-                updateProductCarouselConfig();
-            });
-            
+            // Simply start autoplay, no dots generation needed
             startProductAutoPlay();
-        }
-
-        function updateProductCarouselConfig() {
-            const isMobile = window.innerWidth < 768;
-            // Mobile: 1 item per dot (4 dots)
-            // Desktop: 3 items per dot (2 dots total -> Start & End)
-            const itemsPerDot = isMobile ? 1 : 3;
-            setupDots('productTrack', 'product-dots', 30, itemsPerDot);
         }
 
         function startProductAutoPlay() {
             clearInterval(productAutoPlayInterval);
             productAutoPlayInterval = setInterval(() => {
                 scrollProductCarousel(1, true); // true = triggered by auto-play
-            }, 5000); // Increased to 5 seconds for better UX
+            }, 5000); // 5 seconds per slide
         }
 
         function pauseProductAutoPlay() {
