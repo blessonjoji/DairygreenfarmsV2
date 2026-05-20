@@ -1445,3 +1445,139 @@ section { padding: 110px 0; }
 }
 .modal-var-name { color: var(--white); font-weight: 600; font-size: .88rem; margin-bottom: 3px; }
 .modal-var-desc { color: rgba(255,255,255,.38); font-size: .78rem; line-height: 1.5; }
+
+/* ================================
+   MOBILE OPTIMISATIONS
+================================ */
+
+/* iOS text-size & tap highlight */
+html { -webkit-text-size-adjust: 100%; }
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Prevent horizontal overflow */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* ── Reduce section spacing ── */
+@media (max-width: 768px) {
+  section { padding: 70px 0; }
+  .container { padding: 0 20px; }
+}
+@media (max-width: 480px) {
+  section { padding: 56px 0; }
+  .container { padding: 0 16px; }
+}
+
+/* ── Hero ── */
+@media (max-width: 768px) {
+  .hero-inner { padding: 100px 20px 64px; }
+  .hero-badge { font-size: .62rem; padding: 5px 12px; margin-bottom: 20px; }
+  .hero-h1 { font-size: clamp(2.4rem, 9vw, 3.5rem); margin-bottom: 18px; }
+  .hero-sub { font-size: .92rem; margin-bottom: 28px; }
+  .scroll-cue { display: none; }
+}
+@media (max-width: 480px) {
+  .hero-inner { padding: 86px 16px 56px; }
+  .hero-ctas { flex-direction: column; }
+  .btn-primary,
+  .btn-outline { width: 100%; justify-content: center; padding: 13px 20px; }
+}
+
+/* ── Marquee ── */
+@media (max-width: 480px) {
+  .marquee-wrap { padding: 10px 0; }
+  .m-item { font-size: .68rem; gap: 10px; }
+}
+
+/* ── Stats ── */
+@media (max-width: 768px) {
+  .stat-item { padding: 28px 16px; }
+  .stat-num { font-size: 2.4rem; }
+  .stat-num .suf { font-size: 1.8rem; }
+  .stat-lbl { font-size: .65rem; }
+}
+
+/* ── Products ── */
+@media (max-width: 768px) {
+  .products-head { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 36px; }
+  .p-card { padding: 24px 20px 60px; }
+  .p-icon { width: 52px; height: 52px; font-size: 1.4rem; margin-bottom: 16px; }
+  .p-name { font-size: 1.3rem; }
+  .p-arrow { bottom: 18px; right: 18px; width: 36px; height: 36px; }
+}
+
+/* ── About ── */
+@media (max-width: 768px) {
+  .about-img { height: 280px; }
+  .about-img-wrap { margin-bottom: 40px; }
+  .about-badge { bottom: -16px; right: -8px; padding: 16px 18px; }
+  .about-badge .big { font-size: 1.9rem; }
+  .about-story { font-size: .95rem; }
+  .farm-cards { margin-top: 48px; gap: 12px; }
+  .farm-card { padding: 24px 18px; }
+}
+@media (max-width: 480px) {
+  .about-img { height: 220px; }
+  .about-badge { bottom: -12px; right: -6px; padding: 12px 14px; }
+  .about-badge .big { font-size: 1.6rem; }
+  .about-badge .sml { font-size: .55rem; }
+  .mission-quote { padding: 14px 16px; }
+}
+
+/* ── Gallery ── */
+@media (max-width: 768px) {
+  .gallery-head { margin-bottom: 36px; }
+  .g-item img { min-height: 190px; }
+}
+
+/* ── Values ── */
+@media (max-width: 768px) {
+  .values-grid { margin-top: 40px; gap: 12px; }
+  .v-card { padding: 26px 20px; }
+  .v-icon { width: 46px; height: 46px; font-size: 1.15rem; margin-bottom: 16px; }
+}
+
+/* ── Contact / Footer ── */
+@media (max-width: 768px) {
+  .contact-h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
+  .contact-p { font-size: .9rem; }
+  .c-item { padding: 12px 14px; gap: 10px; }
+  .c-ico { width: 34px; height: 34px; font-size: .8rem; border-radius: 9px; }
+  .c-val { font-size: .82rem; }
+  .c-lbl { font-size: .58rem; }
+  .hours-card { padding: 22px 18px; }
+  .hours-row { font-size: .82rem; padding: 8px 0; }
+  .footer-bottom { flex-direction: column; text-align: center; gap: 6px; margin-top: 40px; }
+}
+
+/* ── Modals ── */
+@media (max-width: 480px) {
+  .modal-box { padding: 28px 20px; border-radius: 18px; }
+  .modal-name { font-size: 1.45rem; }
+}
+
+/* ── Section titles ── */
+@media (max-width: 480px) {
+  .section-title { font-size: clamp(1.75rem, 7vw, 2.2rem); }
+  .eyebrow { font-size: .65rem; }
+}
+
+/* ── Mobile menu touch targets ── */
+@media (max-width: 768px) {
+  #mobileMenu a { padding: 8px 0; }
+}
+
+/* ── iOS: prevent input zoom (needs 16px) ── */
+.chat-input { font-size: 16px; }
+
+/* ── Touch active states (hover doesn't fire on touch) ── */
+@media (hover: none) {
+  .p-card:active { transform: translateY(-4px); border-color: rgba(74,222,128,.3); }
+  .g-item:active img { transform: scale(1.04); }
+  .c-item:active { background: rgba(74,222,128,.09); transform: translateX(2px); }
+  .v-card:active { transform: translateY(-4px); }
+  .btn-primary:active { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(74,222,128,.3); }
+  .btn-outline:active { border-color: var(--green-neon); color: var(--green-neon); }
+  .chat-sug:active { background: var(--green-neon); color: var(--dark); }
+  .chat-c-btn:active { filter: brightness(1.15); }
+  .soc-btn:active { background: var(--green-neon); color: var(--dark); }
+}

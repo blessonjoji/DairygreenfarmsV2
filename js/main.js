@@ -184,32 +184,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: .5 });
   document.querySelectorAll('.count').forEach(c => obs.observe(c));
 
-  // GSAP parallax on hero bg
-  gsap.to('.hero-bg-img', {
-    yPercent: 15,
-    ease: 'none',
-    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
+  // GSAP parallax on hero bg (skip on touch devices to avoid jank)
+  if (window.matchMedia('(hover: hover)').matches) {
+    gsap.to('.hero-bg-img', {
+      yPercent: 15,
+      ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+  }
 });
 
-/* ─── Custom Cursor ─── */
+/* ─── Custom Cursor (desktop only) ─── */
 const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursorRing');
-let mx=0, my=0, rx=0, ry=0;
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cur.style.left = mx+'px'; cur.style.top = my+'px';
-});
-(function track() {
-  rx += (mx - rx) * .13;
-  ry += (my - ry) * .13;
-  ring.style.left = rx+'px'; ring.style.top = ry+'px';
-  requestAnimationFrame(track);
-})();
-document.querySelectorAll('a,button,.p-card,.g-item,.v-card').forEach(el => {
-  el.addEventListener('mouseenter', () => { cur.classList.add('grow'); ring.classList.add('grow'); });
-  el.addEventListener('mouseleave', () => { cur.classList.remove('grow'); ring.classList.remove('grow'); });
-});
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let mx=0, my=0, rx=0, ry=0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx+'px'; cur.style.top = my+'px';
+  });
+  (function track() {
+    rx += (mx - rx) * .13;
+    ry += (my - ry) * .13;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(track);
+  })();
+  document.querySelectorAll('a,button,.p-card,.g-item,.v-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.classList.add('grow'); ring.classList.add('grow'); });
+    el.addEventListener('mouseleave', () => { cur.classList.remove('grow'); ring.classList.remove('grow'); });
+  });
+}
 
 /* ─── Scroll Progress + Navbar ─── */
 window.addEventListener('scroll', () => {
