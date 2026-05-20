@@ -1,1136 +1,492 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dairy Green Farms | Fresh, Honest & Farm Grown</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --farm-green: #14532d;
-            --farm-light: #166534;
-            --farm-cream: #fefce8;
-            --neon-green: #4ade80;
-        }
-        
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #fdfdfb;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dairy Green Farms | Fresh. Honest. Farm Grown.</title>
+  <link rel="icon" href="favicon.ico" />
 
-        h1, h2, h3, .serif {
-            font-family: 'Playfair Display', serif;
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        .hero-bg {
-            background: linear-gradient(rgba(20, 83, 45, 0.5), rgba(20, 83, 45, 0.7)), 
-                        url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?q=80&w=2074&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-        .nav-blur {
-            backdrop-filter: blur(16px);
-            background-color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(20, 83, 45, 0.1);
-        }
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-        /* --- CONTROLLED CAROUSEL (Top Section) --- */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            padding: 20px 0;
-        }
-        
-        .carousel-track {
-            display: flex;
-            gap: 30px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            /* scrollbar-width: none; handled by utility */
-            padding: 20px 50px;
-        }
-        /* .carousel-track::-webkit-scrollbar { display: none; } handled by utility */
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
 
-        .carousel-item {
-            flex: 0 0 280px;
-            background: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #f3f4f6;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            scroll-snap-align: center; /* Added for snapping */
-        }
-        
-        .carousel-item:focus, .carousel-item:hover {
-            transform: translateY(-5px);
-            border-color: var(--farm-green);
-            outline: none;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
+  <!-- Tailwind (utilities only) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        /* "Click to Expand" hint on hover */
-        .carousel-item::after {
-            content: 'Click to Expand';
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            color: var(--farm-green);
-            opacity: 0;
-            transition: opacity 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-        .carousel-item:hover::after { opacity: 1; }
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-
-        .nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.8);
-            border: 1px solid #e5e7eb;
-            color: var(--farm-green);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.2s;
-        }
-        .nav-arrow:hover { background: var(--farm-green); color: white; }
-        .nav-prev { left: 10px; }
-        .nav-next { right: 10px; }
-
-        /* --- PRODUCT DETAILS MODAL (Replaces Detailed Section) --- */
-        .product-modal-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 300;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-        .product-modal {
-            background: white;
-            border-radius: 1.5rem;
-            max-width: 500px;
-            width: 100%;
-            padding: 2.5rem;
-            position: relative;
-            transform: scale(0.95);
-            animation: popIn 0.3s ease forwards;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-        }
-        .product-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #4b5563;
-        }
-        .product-list li:last-child { border-bottom: none; }
-        .product-list i { color: var(--farm-green); font-size: 0.9rem; }
-
-        /* --- VALUES SECTION --- */
-        .values-section {
-            background-color: #fcfcfc; /* Slight off-white to distinguish inside Our Roots */
-            border-radius: 20px;
-            padding: 40px;
-            margin-top: 40px;
-            border: 1px solid #f0f0f0;
-        }
-        .value-card {
-            text-align: center;
-            padding: 1.5rem;
-            transition: transform 0.3s;
-        }
-        .value-card:hover { transform: translateY(-5px); }
-
-        /* --- CHATBOT & UTILS --- */
-        .chat-trigger {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
-            background: #166534;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(22, 101, 52, 0.4);
-            cursor: pointer;
-            z-index: 999;
-            border: 3px solid #4ade80;
-            animation: pulse 3s infinite;
-        }
-        @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);} 70% {box-shadow: 0 0 0 15px rgba(74, 222, 128, 0);} 100% {box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);} }
-
-        /* New Hint Bubble for Chatbot */
-        .chat-hint {
-            position: fixed;
-            bottom: 35px;
-            right: 100px; /* Positioned to the left of the button */
-            background: white;
-            color: #14532d;
-            padding: 12px 20px;
-            border-radius: 20px 20px 0 20px; /* Bubble effect */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-            font-weight: 700;
-            font-size: 0.9rem;
-            z-index: 998;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInHint 0.5s ease-out 1.5s forwards; /* Delays appearance */
-            border: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none; /* Allows clicks to pass through if overlapping (though it shouldn't) */
-        }
-        
-        @keyframes fadeInHint {
-            to { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        }
-
-        .chat-widget {
-            position: fixed; bottom: 100px; right: 25px; width: 350px; height: 500px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            display: none; flex-direction: column; z-index: 998; border: 1px solid #e5e7eb;
-        }
-        .chat-widget.open { display: flex; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-
-        .brand-logo { height: 48px; width: auto; object-fit: contain; }
-        
-        .sparkle-button {
-            background: linear-gradient(135deg, #166534, #15803d);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .sparkle-button:hover {
-            box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* --- AI MODAL --- */
-        .ai-modal-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .ai-panel {
-            background: white;
-            border-radius: 1.5rem;
-            max-width: 40rem;
-            width: 100%;
-            padding: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        .ai-content h3 { color: #14532d; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .ai-content p { margin-bottom: 1rem; color: #4b5563; }
-        .ai-content ul { list-style-type: disc; padding-left: 1.5rem; color: #15803d; }
-
-        /* --- GALLERY GRID --- */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        .gallery-item {
-            position: relative;
-            border-radius: 1rem;
-            overflow: hidden;
-            aspect-ratio: 1;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-        }
-        .gallery-item:hover { transform: scale(1.02); }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        .gallery-item:hover img { transform: scale(1.1); }
-        
-        /* LIGHTBOX STYLES (Important for Gallery to open) */
-        .lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 5000; /* Increased to ensure visibility */
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-        }
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            animation: zoomIn 0.3s ease forwards;
-        }
-
-        /* --- MOBILE MENU ANIMATION --- */
-        .mobile-menu-enter {
-            animation: slideDown 0.3s ease-out forwards;
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* New utility to hide scrollbars for horizontal scroll areas */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-        
-        /* Pagination Dots */
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #d1d5db; /* gray-300 */
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        .dot.active {
-            background-color: #15803d; /* green-700 */
-            width: 24px; /* elongated active dot */
-            border-radius: 4px;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes zoomIn { from { transform: scale(0.9); } to { transform: scale(1); } }
-    </style>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
-<body class="text-slate-800 flex flex-col min-h-screen">
+<body>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed top-0 w-full z-50 nav-blur">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <img src="assets/logo.png" onerror="this.src='https://placehold.co/100x100?text=Logo'" alt="Dairy Green Farms" class="brand-logo shadow-sm rounded-lg">
-                <span class="text-2xl font-bold tracking-tight text-green-900 serif">Dairy Green <span class="font-normal italic text-green-700 text-lg">Farms</span></span>
-            </div>
-            
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-10 text-sm font-semibold uppercase tracking-widest text-green-900">
-                <a href="#home" class="hover:text-green-600 transition">Home</a>
-                <a href="#products" class="hover:text-green-600 transition">Our Harvest</a>
-                <a href="#about" class="hover:text-green-600 transition">Our Roots</a>
-                <a href="#gallery" class="hover:text-green-600 transition">Gallery</a>
-                <a href="#contact" class="hover:text-green-600 transition">Contact</a>
-            </div>
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-            <!-- Hamburger Button -->
-            <button class="md:hidden text-green-900 focus:outline-none" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-        </div>
+<!-- Scroll progress -->
+<div id="scrollProgress" style="width:0%"></div>
 
-        <!-- Mobile Menu Container (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-white border-b border-green-100 shadow-lg flex flex-col p-6 space-y-4">
-            <a href="#home" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Home</a>
-            <a href="#products" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Our Harvest</a>
-            <a href="#about" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Our Roots</a>
-            <a href="#gallery" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Gallery</a>
-            <a href="#contact" class="block text-green-900 font-bold hover:text-green-600 text-lg" onclick="toggleMobileMenu()">Contact</a>
-        </div>
-    </nav>
+<!-- Preloader -->
+<div id="preloader">
+  <div class="pre-ring">
+    <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'" />
+  </div>
+  <div class="pre-name">Dairy Green Farms</div>
+  <div class="pre-bar"><div class="pre-bar-fill"></div></div>
+</div>
 
-    <!-- PRODUCT DETAIL MODAL -->
-    <div id="product-modal" class="product-modal-backdrop" onclick="closeProductModal()">
-        <div class="product-modal" onclick="event.stopPropagation()">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
-            <div class="text-center mb-6">
-                <div id="modal-icon" class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-700 text-2xl"></div>
-                <h3 id="modal-title" class="text-2xl font-bold text-green-900 serif"></h3>
-                <p id="modal-desc" class="text-gray-500 text-sm mt-1"></p>
-            </div>
-            <div class="bg-stone-50 p-6 rounded-xl border border-gray-100">
-                <h4 class="text-xs font-bold text-green-600 uppercase tracking-widest mb-4">Available Varieties</h4>
-                <ul id="modal-list" class="product-list text-sm">
-                    <!-- Dynamic Items -->
-                </ul>
-            </div>
-            <div id="modal-extra" class="mt-6 text-center"></div>
-        </div>
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="nav-wrap">
+    <a href="#hero" class="nav-brand">
+      <img src="assets/logo.png" alt="Dairy Green Farms" onerror="this.style.display='none'" />
+      <div class="nav-brand-text">
+        Dairy Green Farms
+        <small>Est. 2000 · Kerala, India</small>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products">Our Harvest</a></li>
+      <li><a href="#about">Our Roots</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu">
+  <a href="#products" onclick="closeMobile()">Our Harvest</a>
+  <a href="#about" onclick="closeMobile()">Our Roots</a>
+  <a href="#gallery" onclick="closeMobile()">Gallery</a>
+  <a href="#contact" onclick="closeMobile()">Get In Touch</a>
+</div>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg-img"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-inner">
+    <div class="hero-badge">Pure · Organic · Farm Fresh from Kerala</div>
+
+    <h1 class="hero-h1">
+      <span class="line"><span class="line-inner">Fresh. Honest.</span></span>
+      <span class="line"><span class="line-inner accent">Farm Grown.</span></span>
+      <span class="line"><span class="line-inner">Just Like Family.</span></span>
+    </h1>
+
+    <p class="hero-sub">
+      Nurturing tradition, harvesting health. From our soil to your soul. Pure dairy, eggs, and organic goodness straight from Chottanikkara, Kerala.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#products" class="btn-primary">Explore the Farm <i class="fas fa-arrow-right"></i></a>
+      <a href="#about" class="btn-outline">Our Story <i class="fas fa-leaf"></i></a>
+    </div>
+  </div>
+
+  <div class="hero-floats">
+    <div class="hero-float-card">
+      <div class="f-num">25+</div>
+      <div class="f-label">Years of Farming</div>
+    </div>
+    <div class="hero-float-card">
+      <div class="f-num">100%</div>
+      <div class="f-label">Chemical Free</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="scroll-cue-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     MARQUEE
+══════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="m-item"><span class="m-dot"></span>Pure Farm Milk</span>
+    <span class="m-item"><span class="m-dot"></span>Traditional Ghee</span>
+    <span class="m-item"><span class="m-dot"></span>Free-Range Eggs</span>
+    <span class="m-item"><span class="m-dot"></span>Organic Manure</span>
+    <span class="m-item"><span class="m-dot"></span>Seasonal Vegetables</span>
+    <span class="m-item"><span class="m-dot"></span>100% Chemical Free</span>
+    <span class="m-item"><span class="m-dot"></span>Chottanikkara · Kerala</span>
+    <span class="m-item"><span class="m-dot"></span>Est. 2000</span>
+    <span class="m-item"><span class="m-dot"></span>Pure Farm Milk</span>
+    <span class="m-item"><span class="m-dot"></span>Traditional Ghee</span>
+    <span class="m-item"><span class="m-dot"></span>Free-Range Eggs</span>
+    <span class="m-item"><span class="m-dot"></span>Organic Manure</span>
+    <span class="m-item"><span class="m-dot"></span>Seasonal Vegetables</span>
+    <span class="m-item"><span class="m-dot"></span>100% Chemical Free</span>
+    <span class="m-item"><span class="m-dot"></span>Chottanikkara · Kerala</span>
+    <span class="m-item"><span class="m-dot"></span>Est. 2000</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     STATS
+══════════════════════════════ -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+        <div class="stat-ico"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-num" data-target="25"><span class="count">0</span><span class="suf">+</span></div>
+        <div class="stat-lbl">Years Farming</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-ico"><i class="fas fa-cow"></i></div>
+        <div class="stat-num" data-target="100"><span class="count">0</span><span class="suf">%</span></div>
+        <div class="stat-lbl">Chemical Free</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-ico"><i class="fas fa-leaf"></i></div>
+        <div class="stat-num" data-target="4"><span class="count">0</span><span class="suf">+</span></div>
+        <div class="stat-lbl">Product Categories</div>
+      </div>
+      <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-ico"><i class="fas fa-heart"></i></div>
+        <div class="stat-num" data-target="365"><span class="count">0</span></div>
+        <div class="stat-lbl">Days a Year</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     PRODUCTS
+══════════════════════════════ -->
+<section id="products">
+  <div class="container">
+    <div class="products-head">
+      <div>
+        <div class="eyebrow">Our Harvest</div>
+        <h2 class="section-title">Pure Goods,<br><em>Pure Intentions</em></h2>
+      </div>
+      <p class="section-desc" style="max-width:360px;">
+        Every product is a promise: grown, harvested, and delivered with the same care we give our family.
+      </p>
     </div>
 
-    <!-- AI MODAL -->
-    <div id="ai-modal" class="ai-modal-backdrop">
-        <div class="ai-panel">
-            <button onclick="closeAIModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700">
-                    <i class="fas fa-lightbulb"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-green-900 serif">Did You Know?</h3>
-            </div>
-            <div id="ai-content-area" class="max-h-[60vh] overflow-y-auto">
-                <div id="ai-loading" class="hidden text-center py-8 text-green-600 animate-pulse">Consulting nature's wisdom...</div>
-                <div id="ai-result" class="ai-content text-gray-700"></div>
-            </div>
+    <div class="products-grid">
+      <div class="p-card" data-aos="fade-up" data-aos-delay="0" onclick="openModal('milk')">
+        <div class="p-icon">🥛</div>
+        <span class="p-tag">Dairy</span>
+        <h3 class="p-name">Milk Products</h3>
+        <p class="p-desc">Pure farm milk, aromatic traditional ghee, and probiotic-rich natural curd. Straight from our cows to your table.</p>
+        <div class="p-chips">
+          <span class="p-chip">Raw Farm Milk</span>
+          <span class="p-chip">Traditional Ghee</span>
+          <span class="p-chip">Natural Curd</span>
         </div>
+        <div class="p-arrow"><i class="fas fa-arrow-up-right"></i></div>
+      </div>
+
+      <div class="p-card" data-aos="fade-up" data-aos-delay="100" onclick="openModal('eggs')">
+        <div class="p-icon">🥚</div>
+        <span class="p-tag">Free Range</span>
+        <h3 class="p-name">Country Eggs</h3>
+        <p class="p-desc">Free-range hen and duck eggs from happy birds who roam freely, forage naturally, and live without stress or cages.</p>
+        <div class="p-chips">
+          <span class="p-chip">Hen Eggs</span>
+          <span class="p-chip">Duck Eggs</span>
+        </div>
+        <div class="p-arrow"><i class="fas fa-arrow-up-right"></i></div>
+      </div>
+
+      <div class="p-card" data-aos="fade-up" data-aos-delay="200" onclick="openModal('manure')">
+        <div class="p-icon">🌿</div>
+        <span class="p-tag">Organic</span>
+        <h3 class="p-name">Organic Manure</h3>
+        <p class="p-desc">Rich, natural soil amendments: dried cow dung, vermicompost, and biogas slurry that transform your garden into a paradise.</p>
+        <div class="p-chips">
+          <span class="p-chip">Dried Cow Dung</span>
+          <span class="p-chip">Vermicompost</span>
+          <span class="p-chip">Biogas Slurry</span>
+        </div>
+        <div class="p-arrow"><i class="fas fa-arrow-up-right"></i></div>
+      </div>
+
+      <div class="p-card" data-aos="fade-up" data-aos-delay="300" onclick="openModal('vegetables')">
+        <div class="p-icon">🥦</div>
+        <span class="p-tag">Seasonal</span>
+        <h3 class="p-name">Seasonal Vegetables</h3>
+        <p class="p-desc">Rotation-grown tomatoes, brinjals, beans and more, nurtured in soil enriched only by our own farm's organic goodness.</p>
+        <div class="p-chips">
+          <span class="p-chip">Tomatoes</span>
+          <span class="p-chip">Brinjals</span>
+          <span class="p-chip">Beans</span>
+        </div>
+        <div class="p-arrow"><i class="fas fa-arrow-up-right"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     ABOUT
+══════════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap" data-aos="fade-right">
+        <img src="assets/cow.jpg" alt="Farm life" class="about-img"
+             onerror="this.src='https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=700'" />
+        <div class="about-badge">
+          <span class="big">25+</span>
+          <span class="sml">Years of Pure Farming</span>
+        </div>
+      </div>
+
+      <div data-aos="fade-left">
+        <div class="eyebrow">Our Roots</div>
+        <h2 class="section-title">A Farm Born From<br><em>Frustration &amp; Love</em></h2>
+
+        <p class="about-story">
+          <strong>Mr. Joji Joseph</strong> started Dairy Green Farms in 2000. Not as a business venture, but as a response to a growing crisis: the declining quality of food reaching families across Kerala.
+        </p>
+        <p class="about-story">
+          Watching chemical-laced produce and adulterated dairy products become the norm, he made a simple but powerful decision: <strong>to grow food the way it was always meant to be grown.</strong>
+        </p>
+
+        <div class="mission-quote">
+          <p>"To provide pure, honest, chemical-free farm products to the community, because every family deserves food that truly nourishes."</p>
+        </div>
+
+        <a href="#contact" class="btn-primary" style="width:fit-content;">
+          Connect With Us <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
     </div>
 
-    <!-- LIGHTBOX (For Gallery) -->
-    <div id="lightbox" class="lightbox">
-        <img id="lightbox-img" src="" alt="Full Screen View">
+    <div class="farm-cards">
+      <div class="farm-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="farm-card-icon">🌅</div>
+        <h4 class="farm-card-title">The 2 AM Symphony</h4>
+        <p class="farm-card-desc">Our day begins before dawn. The gentle sounds of the herd, the warmth of the milking stalls, and the quiet satisfaction of honest work.</p>
+      </div>
+      <div class="farm-card" data-aos="fade-up" data-aos-delay="150">
+        <div class="farm-card-icon">♻️</div>
+        <h4 class="farm-card-title">A Natural Cycle</h4>
+        <p class="farm-card-desc">Nothing goes to waste. Cow dung becomes vermicompost, slurry feeds the soil, and the land gives back tenfold. A perfect, sacred loop.</p>
+      </div>
+      <div class="farm-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="farm-card-icon">🌿</div>
+        <h4 class="farm-card-title">Serenity &amp; Trust</h4>
+        <p class="farm-card-desc">Nestled in the green heart of Chottanikkara, our farm is more than a place. It's a promise, kept fresh every single day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     GALLERY
+══════════════════════════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="gallery-head" data-aos="fade-up">
+      <div class="eyebrow" style="justify-content:center;">Farm Life Gallery</div>
+      <h2 class="section-title">A Glimpse Into Our<br><em>Green World</em></h2>
     </div>
 
-    <main class="flex-grow">
-        <!-- 1. HERO SECTION -->
-        <section id="home" class="hero-bg h-[85vh] min-h-[600px] flex items-center px-6">
-            <div class="max-w-7xl mx-auto w-full text-center md:text-left">
-                <div class="max-w-2xl text-white">
-                    <span class="uppercase tracking-[0.3em] text-sm font-bold mb-4 block text-green-200">Established 2000</span>
-                    <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6 serif">Fresh. Honest.<br>Farm Grown.<br><span class="italic font-normal text-4xl md:text-6xl">Just Like Family.</span></h1>
-                    <p class="text-xl md:text-2xl opacity-90 mb-10 font-light leading-relaxed">Nurturing tradition, harvesting health. From our soil to your soul.</p>
-                    <a href="#products" class="inline-block bg-white text-green-900 px-10 py-4 rounded-full font-bold hover:bg-green-50 transition-all shadow-lg">
-                        Explore the Farm <i class="fas fa-arrow-right text-xs ml-2"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. MERGED PRODUCTS SECTION (Clean Carousel + Modal) -->
-        <section id="products" class="py-20 bg-stone-50 border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-6 mb-12 text-center">
-                <span class="text-green-600 font-bold uppercase tracking-widest text-sm mb-4 block">What We Offer</span>
-                <h2 class="text-4xl md:text-5xl font-bold text-green-900 serif">Our Harvest</h2>
-                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Explore our range. Click on any item to view available varieties.</p>
-            </div>
-            
-            <div class="carousel-container max-w-7xl mx-auto" onmouseenter="pauseProductAutoPlay()" onmouseleave="startProductAutoPlay()">
-                <button class="nav-arrow nav-prev" onclick="scrollProductCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
-                <button class="nav-arrow nav-next" onclick="scrollProductCarousel(1)"><i class="fas fa-chevron-right"></i></button>
-                
-                <div class="carousel-track snap-x snap-mandatory scrollbar-hide" id="productTrack">
-                    <!-- Milk -->
-                    <div class="carousel-item" onclick="openProductModal('milk')">
-                        <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-700"><i class="fas fa-tint text-2xl"></i></div>
-                        <h3 class="font-bold text-green-900 text-lg">Pure Milk</h3>
-                        <p class="text-gray-500 text-sm mt-2">Rich & Creamy</p>
-                    </div>
-                    
-                    <!-- Eggs -->
-                    <div class="carousel-item" onclick="openProductModal('eggs')">
-                        <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4 text-yellow-700"><i class="fas fa-egg text-2xl"></i></div>
-                        <h3 class="font-bold text-green-900 text-lg">Country Eggs</h3>
-                        <p class="text-gray-500 text-sm mt-2">Free-Range</p>
-                    </div>
-
-                    <!-- Manure -->
-                    <div class="carousel-item" onclick="openProductModal('manure')">
-                        <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-800"><i class="fas fa-seedling text-2xl"></i></div>
-                        <h3 class="font-bold text-green-900 text-lg">Organic Manure</h3>
-                        <p class="text-gray-500 text-sm mt-2">Soil Health</p>
-                    </div>
-
-                    <!-- Veggies -->
-                    <div class="carousel-item" onclick="openProductModal('veggies')">
-                        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-700"><i class="fas fa-carrot text-2xl"></i></div>
-                        <h3 class="font-bold text-green-900 text-lg">Fresh Veggies</h3>
-                        <p class="text-gray-500 text-sm mt-2">Seasonal</p>
-                    </div>
-
-                </div>
-                <!-- Dots removed as per request to keep it clean -->
-            </div>
-        </section>
-
-        <!-- 3. OUR ROOTS & CORE VALUES (Merged) -->
-        <section id="about" class="py-24 px-6 bg-white">
-            <div class="max-w-6xl mx-auto">
-                <!-- Origin Story -->
-                <div class="grid md:grid-cols-2 gap-12 items-start mb-20">
-                    <div class="rounded-3xl overflow-hidden shadow-2xl h-full min-h-[500px] relative">
-                        <img src="assets/cow.jpg" onerror="this.src='https://images.unsplash.com/photo-1543362906-acfc16c623a2?q=80&w=800'" alt="Dairy Cow" class="absolute inset-0 w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-green-950/80 to-transparent flex items-end p-8">
-                            <p class="text-white italic text-lg font-light">"Not just a business, but a social initiative."</p>
-                        </div>
-                    </div>
-                    <div class="space-y-8">
-                        <div>
-                            <span class="text-green-600 font-bold uppercase tracking-widest text-sm">Our Story</span>
-                            <h2 class="text-4xl font-bold text-green-900 serif mt-2">A Return to Honest Roots</h2>
-                        </div>
-                        
-                        <div class="prose prose-lg text-gray-700 space-y-6">
-                            <p>
-                                Farming runs in our blood, a heritage passed down silently through generations. However, Dairy Green Farms as you know it today was born from a moment of deep reflection during the challenging times of COVID.
-                            </p>
-                            <p>
-                                Our founder, <strong>Mr. Joji Joseph</strong>, witnessed the declining health of our community, fueled by a market flooded with pesticide-laden, fast-paced, and chemically accelerated produce. He realized that modern food systems had lost their integrity. Driven by a vision to provide something pure to those who deserve it, he left his conventional career to revive his ancestral vocation.
-                            </p>
-                            <p>
-                                It was not started as a mere business, but as a <strong>social initiative</strong>. The goal was simple yet profound: to bring back the honest, nutrient-rich farm products our ancestors enjoyed, ensuring our community has access to food that heals rather than harms.
-                            </p>
-                        </div>
-
-                        <div class="bg-green-50 p-6 rounded-2xl border border-green-100">
-                            <h3 class="text-xl font-bold text-green-800 serif mb-2">Our Mission</h3>
-                            <p class="text-green-900/80 text-sm leading-relaxed">
-                                To serve people with love, integrity, and uncompromised quality, just as we would serve our own family. We aim to reconnect people with food that is not only nourishing but also transparent in its origin.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Farm Life Narrative -->
-                <div class="mb-20">
-                    <div class="text-center mb-10">
-                        <span class="text-green-600 font-bold uppercase tracking-widest text-sm">Life at the Farm</span>
-                        <h3 class="text-3xl font-bold text-green-900 serif mt-2">Harmony in Every Step</h3>
-                    </div>
-                    
-                    <!-- Mobile Swipe Hint -->
-                    <div class="md:hidden text-center text-green-400 text-xs font-bold mb-4 animate-pulse">
-                        Swipe to explore <i class="fas fa-chevron-right text-xs ml-1"></i>
-                    </div>
-
-                    <!-- Updated Layout: Horizontal Scroll on Mobile, Grid on Desktop -->
-                    <div id="farmlife-scroll-container" class="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible pb-6 md:pb-0 snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0 scrollbar-hide">
-                        <!-- Card 1: The Routine -->
-                        <div class="min-w-[85vw] md:min-w-0 snap-center bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-shadow">
-                            <i class="fas fa-clock text-4xl text-green-700 mb-4"></i>
-                            <h4 class="text-xl font-bold text-green-900 mb-3 serif">The 2 AM Symphony</h4>
-                            <p class="text-gray-600 leading-relaxed text-sm">
-                                Our day begins while the world sleeps. At 2 AM, our dedicated workers - who treat the farm as their own - start their day. We believe happy cows give the best milk, so we bathe them with respect and even play soothing music to keep them relaxed. We prioritize fresh, green fodder cultivated on our own land over processed feeds, ensuring the milk is naturally rich in fat and nutrients.
-                            </p>
-                        </div>
-
-                        <!-- Card 2: The Ecosystem -->
-                        <div class="min-w-[85vw] md:min-w-0 snap-center bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-shadow">
-                            <i class="fas fa-recycle text-4xl text-green-700 mb-4"></i>
-                            <h4 class="text-xl font-bold text-green-900 mb-3 serif">A Natural Cycle</h4>
-                            <p class="text-gray-600 leading-relaxed text-sm">
-                                Nothing goes to waste here. Our organic manure is a testament to nature's engineering. We don't use machines to process cow dung; instead, our free-range hens do the work! They scratch and aerate the drying manure, turning it into fine, bacteria-rich powder naturally. Meanwhile, our ducks thrive in the nearby paddy lands, creating a perfect, sustainable ecosystem.
-                            </p>
-                        </div>
-
-                        <!-- Card 3: The Sanctuary -->
-                        <div class="min-w-[85vw] md:min-w-0 snap-center bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-100 hover:shadow-lg transition-shadow">
-                            <i class="fas fa-tree text-4xl text-green-700 mb-4"></i>
-                            <h4 class="text-xl font-bold text-green-900 mb-3 serif">Serenity & Trust</h4>
-                            <p class="text-gray-600 leading-relaxed text-sm">
-                                Located far from the city's chaos, our farm is a sanctuary of peace. This serene environment is crucial for the health of our animals. We are building a legacy where trust is valued above profit. Our expanding line of organic manures and biogas is just another step in our journey to provide products that are honest, transparent, and merged with the ecosystem.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Farm Life Dots (Mobile Only) -->
-                    <div id="farmlife-dots" class="flex justify-center gap-2 mt-4 md:hidden"></div>
-                    
-                    <div class="text-center mt-8 md:mt-12">
-                        <button onclick="generateFarmFact()" class="sparkle-button px-8 py-3 rounded-full font-bold text-sm shadow-lg transform hover:-translate-y-1 transition-transform">
-                            💡 Click for a Random Farm Fact
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Vision (UPDATED) -->
-                <div class="bg-emerald-50 rounded-3xl p-10 md:p-16 text-center text-emerald-900 relative overflow-hidden border border-emerald-100 shadow-sm">
-                    <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-                    <div class="relative z-10 max-w-3xl mx-auto">
-                        <h3 class="text-3xl md:text-4xl font-bold serif mb-6 text-emerald-800">Our Vision</h3>
-                        <p class="text-lg md:text-xl leading-relaxed font-light text-emerald-700">
-                            To become a leading symbol of natural farming and ethical produce, inspiring communities to choose health and sustainability through local and honest food systems.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- CORE VALUES (Updated for Mobile Scroll) -->
-                <div class="values-section mt-20">
-                    <div class="text-center mb-10">
-                        <h3 class="text-3xl font-bold text-green-900 serif">Our Core Values</h3>
-                    </div>
-                    
-                    <!-- Mobile Swipe Hint -->
-                    <div class="md:hidden text-center text-green-400 text-xs font-bold mb-4 animate-pulse">
-                        Swipe to explore <i class="fas fa-chevron-right text-xs ml-1"></i>
-                    </div>
-
-                    <div id="values-scroll-container" class="flex md:grid md:grid-cols-3 gap-6 md:gap-12 overflow-x-auto md:overflow-visible pb-6 md:pb-0 snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0 scrollbar-hide">
-                        <div class="value-card min-w-[75vw] md:min-w-0 snap-center">
-                            <i class="fas fa-leaf text-5xl text-green-600 mb-6"></i>
-                            <h4 class="text-xl font-bold text-gray-900 mb-3">Sustainability</h4>
-                            <p class="text-gray-600">We nurture the soil and care for animals to protect future generations.</p>
-                        </div>
-                        <!-- This is the middle card we will center on load -->
-                        <div class="value-card min-w-[75vw] md:min-w-0 snap-center">
-                            <i class="fas fa-heart text-5xl text-green-600 mb-6"></i>
-                            <h4 class="text-xl font-bold text-gray-900 mb-3">Love & Family</h4>
-                            <p class="text-gray-600">Every product is made with care, just like we’d offer to our own loved ones.</p>
-                        </div>
-                        <div class="value-card min-w-[75vw] md:min-w-0 snap-center">
-                            <i class="fas fa-balance-scale text-5xl text-green-600 mb-6"></i>
-                            <h4 class="text-xl font-bold text-gray-900 mb-3">Integrity</h4>
-                            <p class="text-gray-600">We believe in full transparency, no chemicals, no shortcuts, only truth.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Core Values Dots (Mobile Only) -->
-                    <div id="values-dots" class="flex justify-center gap-2 mt-4 md:hidden"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. FARM LIFE GALLERY (Restored & Renamed) -->
-        <section id="gallery" class="py-24 px-6 bg-stone-50">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-16">
-                    <span class="text-green-600 font-bold uppercase tracking-widest text-sm mb-4 block">Visual Diary</span>
-                    <h2 class="text-4xl md:text-5xl font-bold text-green-900 serif">Farm Life Gallery</h2>
-                    <p class="text-gray-500 mt-4">Glimpses of our daily life, from sunrise chores to sunset calm.</p>
-                </div>
-
-                <!-- Mobile Swipe Hint -->
-                <div class="md:hidden text-center text-green-400 text-xs font-bold mb-4 animate-pulse">
-                    Swipe to view gallery <i class="fas fa-chevron-right text-xs ml-1"></i>
-                </div>
-
-                <!-- Gallery Container: Horizontal Scroll on Mobile, Grid on Desktop -->
-                <div id="gallery-scroll-container" class="flex md:grid md:grid-cols-4 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-6 md:pb-0 snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0 scrollbar-hide">
-                    
-                    <!-- Gallery Item 1 -->
-                    <div class="min-w-[280px] md:min-w-0 snap-center gallery-item h-64 md:h-auto">
-                        <img src="assets/gallery/1.jpg" onerror="this.src='https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?q=80&w=800'" alt="Farm" class="gallery-img w-full h-full object-cover">
-                    </div>
-                    
-                    <!-- Gallery Item 2 -->
-                    <div class="min-w-[280px] md:min-w-0 snap-center gallery-item h-64 md:h-auto">
-                        <img src="assets/gallery/2.jpg" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800'" alt="Fields" class="gallery-img w-full h-full object-cover">
-                    </div>
-                    
-                    <!-- Gallery Item 3 -->
-                    <div class="min-w-[280px] md:min-w-0 snap-center gallery-item h-64 md:h-auto">
-                        <img src="assets/gallery/3.jpg" onerror="this.src='https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800'" alt="Veggies" class="gallery-img w-full h-full object-cover">
-                    </div>
-                    
-                    <!-- Gallery Item 4 -->
-                    <div class="min-w-[280px] md:min-w-0 snap-center gallery-item h-64 md:h-auto">
-                        <img src="assets/gallery/4.jpg" onerror="this.src='https://images.unsplash.com/photo-1527672829631-016042ee8de0?q=80&w=800'" alt="Ducks" class="gallery-img w-full h-full object-cover">
-                    </div>
-
-                </div>
-
-                <!-- Gallery Dots (Mobile Only) -->
-                <div id="gallery-dots" class="flex justify-center gap-2 mt-4 md:hidden">
-                    <!-- Dots injected by JS -->
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- CHATBOT "Mini" -->
-    <div class="chat-hint" id="chat-hint" onclick="toggleChat()">
-        👋 Hi! I'm Mini. Need help?
+    <div class="gallery-grid">
+      <div class="g-item" data-aos="fade-up" data-aos-delay="0" onclick="openLightbox('assets/gallery/1.jpg')">
+        <img src="assets/gallery/1.jpg" alt="Farm" onerror="this.src='https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
+      <div class="g-item" data-aos="fade-up" data-aos-delay="80" onclick="openLightbox('assets/gallery/2.jpg')">
+        <img src="assets/gallery/2.jpg" alt="Fields" onerror="this.src='https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
+      <div class="g-item" data-aos="fade-up" data-aos-delay="160" onclick="openLightbox('assets/gallery/3.jpg')">
+        <img src="assets/gallery/3.jpg" alt="Veggies" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
+      <div class="g-item" data-aos="fade-up" data-aos-delay="240" onclick="openLightbox('assets/gallery/4.jpg')">
+        <img src="assets/gallery/4.jpg" alt="Ducks" onerror="this.src='https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
+      <div class="g-item" data-aos="fade-up" data-aos-delay="320" onclick="openLightbox('assets/gallery/5.jpg')">
+        <img src="assets/gallery/5.jpg" alt="Farm" onerror="this.src='https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
+      <div class="g-item" data-aos="fade-up" data-aos-delay="400" onclick="openLightbox('assets/gallery/6.jpg')">
+        <img src="assets/gallery/6.jpg" alt="Farm" onerror="this.src='https://images.unsplash.com/photo-1444392061186-9fc38f7bde8d?w=800'" />
+        <div class="g-overlay"><div class="g-expand"><i class="fas fa-expand"></i></div></div>
+      </div>
     </div>
-    <div class="chat-trigger" onclick="toggleChat()">
-        <i class="fas fa-cow text-white text-3xl"></i>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     VALUES
+══════════════════════════════ -->
+<section id="values">
+  <div class="container">
+    <div style="text-align:center" data-aos="fade-up">
+      <div class="eyebrow" style="justify-content:center;">What We Stand For</div>
+      <h2 class="section-title">Our Core <em>Values</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="v-card" data-n="01" data-aos="fade-up" data-aos-delay="0">
+        <div class="v-icon">🌱</div>
+        <h3 class="v-title">Sustainability</h3>
+        <p class="v-desc">We farm in harmony with nature: no chemicals, no shortcuts. Every practice is chosen to heal the earth, not harm it.</p>
+      </div>
+      <div class="v-card" data-n="02" data-aos="fade-up" data-aos-delay="150">
+        <div class="v-icon">❤️</div>
+        <h3 class="v-title">Love &amp; Family</h3>
+        <p class="v-desc">We treat every customer like family. The food we grow is the same food we feed our own children: pure, honest, and full of love.</p>
+      </div>
+      <div class="v-card" data-n="03" data-aos="fade-up" data-aos-delay="300">
+        <div class="v-icon">🤝</div>
+        <h3 class="v-title">Integrity</h3>
+        <p class="v-desc">No additives, no adulterants, no compromises. What you see is exactly what you get. Straight from the farm, nothing more, nothing less.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     CONTACT / FOOTER
+══════════════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div data-aos="fade-right">
+        <div class="eyebrow">Get In Touch</div>
+        <h2 class="contact-h2">Ready for <em>Real</em><br>Farm Fresh Goodness?</h2>
+        <p class="contact-p">Reach out to place an order, ask about our products, or just say hello. We're a family farm and we love hearing from you.</p>
+
+        <div class="contact-items">
+          <a href="tel:9567649770" class="c-item">
+            <div class="c-ico"><i class="fas fa-phone"></i></div>
+            <div><div class="c-lbl">Call Us</div><div class="c-val">+91 95676 49770</div></div>
+            <i class="fas fa-arrow-right c-arr"></i>
+          </a>
+          <a href="https://wa.me/919447819597" target="_blank" class="c-item">
+            <div class="c-ico"><i class="fab fa-whatsapp"></i></div>
+            <div><div class="c-lbl">WhatsApp</div><div class="c-val">+91 94478 19597</div></div>
+            <i class="fas fa-arrow-right c-arr"></i>
+          </a>
+          <a href="mailto:dairygreenfarms@gmail.com" class="c-item">
+            <div class="c-ico"><i class="fas fa-envelope"></i></div>
+            <div><div class="c-lbl">Email</div><div class="c-val">dairygreenfarms@gmail.com</div></div>
+            <i class="fas fa-arrow-right c-arr"></i>
+          </a>
+          <a href="https://www.google.com/maps/search/Chottanikkara+Kerala" target="_blank" class="c-item">
+            <div class="c-ico"><i class="fas fa-location-dot"></i></div>
+            <div><div class="c-lbl">Visit Us</div><div class="c-val">Chottanikkara, Kerala, India</div></div>
+            <i class="fas fa-arrow-right c-arr"></i>
+          </a>
+        </div>
+      </div>
+
+      <div data-aos="fade-left">
+        <div class="hours-card">
+          <div class="hours-ttl">Farm Hours</div>
+          <div class="hours-row"><span class="hours-k">Monday – Saturday</span><span class="hours-v">8 AM – 6 PM</span></div>
+          <div class="hours-row"><span class="hours-k">Sunday</span><span class="hours-v">8 AM – 1 PM</span></div>
+          <div class="hours-row"><span class="hours-k">WhatsApp Orders</span><span class="hours-v">Always Open</span></div>
+        </div>
+
+        <div>
+          <div class="hours-ttl" style="color:rgba(255,255,255,.3);margin-bottom:12px;">Follow Our Farm Journey</div>
+          <div class="social-row">
+            <a href="https://instagram.com/dairygreenfarms" target="_blank" class="soc-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/919447819597" target="_blank" class="soc-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:dairygreenfarms@gmail.com" class="soc-btn" title="Email"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="chat-widget" id="chat-widget">
-        <div class="p-4 bg-green-800 text-white flex justify-between items-center rounded-t-2xl">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-green-800 font-bold"><i class="fas fa-cow"></i></div>
-                <div>
-                    <h4 class="font-bold">Mini</h4>
-                    <p class="text-xs text-green-200">AI Farm Assistant</p>
-                </div>
-            </div>
-            <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="flex-grow p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3" id="chat-messages">
-            <div class="bg-white p-3 rounded-bl-xl rounded-r-xl shadow-sm text-sm text-gray-700 self-start border border-gray-200">
-                Moo! 🐮 Welcome to Dairy Green Farms. I'm Mini! How may I help you? Ask me about our fresh ghee, milk, or how to visit us!
-            </div>
-        </div>
-        <div class="p-2 bg-white border-t border-gray-100 flex gap-2 overflow-x-auto">
-            <button onclick="sendQuickMessage('Products?')" class="whitespace-nowrap px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full border border-green-100">Products</button>
-            <button onclick="sendQuickMessage('Contact?')" class="whitespace-nowrap px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full border border-green-100">Contact</button>
-            <button onclick="sendQuickMessage('Location?')" class="whitespace-nowrap px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full border border-green-100">Location</button>
-        </div>
-        <div class="p-3 bg-white border-t border-gray-200 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Ask Mini..." class="flex-grow px-3 py-2 rounded-full border border-gray-300 focus:border-green-600 outline-none text-sm" onkeypress="handleChatKey(event)">
-            <button onclick="sendUserMessage()" class="w-10 h-10 bg-green-800 text-white rounded-full flex items-center justify-center"><i class="fas fa-paper-plane text-xs"></i></button>
-        </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2025 Dairy Green Farms. All rights reserved. Chottanikkara, Kerala.</div>
+      <div class="footer-love">Grown with <span>♥</span> for your family</div>
     </div>
+  </div>
+</section>
 
-    <!-- FOOTER -->
-    <footer id="contact" class="bg-green-950 text-stone-200 pt-20 pb-10 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-                <!-- Brand -->
-                <div class="space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl font-bold text-white serif">Dairy Green Farms</span>
-                    </div>
-                    <p class="text-stone-400 text-sm leading-relaxed">
-                        Fresh.Honest.Farm Grown. Since 2000.
-                    </p>
-                </div>
+<!-- ══════════════════════════════
+     LIGHTBOX
+══════════════════════════════ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+  <img src="" id="lbImg" alt="Gallery photo" />
+</div>
 
-                <!-- Connect / Contact -->
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 pb-2 border-b border-white/10">Connect</h4>
-                    <ul class="space-y-5 text-sm">
-                        <li class="flex items-start gap-4">
-                            <i class="fas fa-phone-alt mt-1 text-green-500"></i>
-                            <div>
-                                <p class="text-white font-bold text-xs uppercase opacity-50 mb-1">Call & WhatsApp</p>
-                                <div class="flex flex-col">
-                                    <a href="tel:9567649770" class="text-stone-300 hover:text-white transition">Call: 9567649770</a>
-                                    <a href="https://wa.me/9447819597" target="_blank" class="text-stone-300 hover:text-white transition">WA: 9447819597</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <i class="fas fa-envelope mt-1 text-green-500"></i>
-                            <div>
-                                <p class="text-white font-bold text-xs uppercase opacity-50 mb-1">Email</p>
-                                <a href="mailto:dairygreenfarms@gmail.com" class="text-stone-300 hover:text-white transition">dairygreenfarms@gmail.com</a>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <i class="fab fa-instagram mt-1 text-green-500"></i>
-                            <div>
-                                <p class="text-white font-bold text-xs uppercase opacity-50 mb-1">Social</p>
-                                <a href="https://www.instagram.com/dairygreenfarms" target="_blank" class="text-stone-300 hover:text-white transition">Follow our Story</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+<!-- ══════════════════════════════
+     PRODUCT MODAL
+══════════════════════════════ -->
+<div id="productModal" onclick="modalOverlayClick(event)">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
-                <!-- Location -->
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 pb-2 border-b border-white/10">Visit Us</h4>
-                    <p class="text-stone-400 text-sm mb-4">Chottanikkara, Kerala, India</p>
-                    <a href="https://maps.app.goo.gl/M7nPhFcKew258FET7" target="_blank" class="inline-flex items-center gap-2 text-white border border-white/20 px-4 py-2 rounded-full hover:bg-white/10 transition text-xs font-bold uppercase tracking-widest">
-                        <i class="fas fa-map-marker-alt"></i> Get Directions
-                    </a>
-                </div>
-            </div>
-            
-            <div class="border-t border-white/5 pt-10 text-center text-[10px] uppercase tracking-[0.2em] font-bold text-stone-500">
-                <p>© 2026 Dairy Green Farms. Natural Living, Honored Heritage.</p>
-            </div>
-        </div>
-    </footer>
+<!-- ══════════════════════════════
+     CHATBOT
+══════════════════════════════ -->
+<div id="chatHint">Ask me anything about our farm! 🌿</div>
 
-    <script>
-        // --- API CONFIG ---
-        // NOTE: This key is free for low usage but requires a Google Cloud billing account for high traffic/production.
-        const apiKey = ""; 
-        const modelName = "gemini-2.5-flash-preview-09-2025";
+<button id="chatBtn" onclick="toggleChat()" aria-label="Chat with us">
+  <div class="pulse"></div>
+  🐄
+</button>
 
-        // --- PRODUCT DATA FOR MODAL ---
-        const productData = {
-            milk: {
-                title: "Milk Products",
-                icon: '<i class="fas fa-glass-milk"></i>',
-                desc: "Fresh, unadulterated goodness from our happy cows.",
-                items: ["Pure Farm Milk (Raw)", "Traditional Ghee (Aromatic & Grainy)", "Natural Curd (Probiotic Rich)"]
-            },
-            eggs: {
-                title: "Country Eggs",
-                icon: '<i class="fas fa-egg"></i>',
-                desc: "Nutrient-rich eggs from free-range birds.",
-                items: ["Free-range Hen Eggs", "Country Duck Eggs"]
-            },
-            manure: {
-                title: "Organic Manure",
-                icon: '<i class="fas fa-seedling"></i>',
-                desc: "Black gold for your home garden.",
-                items: ["Dried Cow Dung (Specialty Product)", "Vermicompost", "Biogas Slurry"],
-                hasAI: true // Special flag for AI button
-            },
-            veggies: {
-                title: "Seasonal Veggies",
-                icon: '<i class="fas fa-carrot"></i>',
-                desc: "Grown with love, harvested at peak ripeness.",
-                items: ["Tomatoes", "Brinjals", "Beans (Selection varies by current rotation)"]
-            },
-            curd: {
-                title: "Natural Curd",
-                icon: '<i class="fas fa-tint"></i>',
-                desc: "Thick, creamy, and naturally set.",
-                items: ["Set Curd", "Buttermilk"]
-            }
-        };
+<div id="chatWidget">
+  <div class="chat-head">
+    <div class="chat-av-wrap">
+      <div class="chat-av">🌿</div>
+      <div class="chat-av-dot"></div>
+    </div>
+    <div class="chat-head-info">
+      <div class="chat-name">Dairy Green Assistant</div>
+      <div class="chat-status">Always here to help</div>
+    </div>
+    <button class="chat-x" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+  </div>
 
-        // --- CAROUSEL LOGIC (Products) ---
-        let productAutoPlayInterval;
-        
-        function setupProductCarousel() {
-            // Simply start autoplay, no dots generation needed
-            startProductAutoPlay();
-        }
+  <div id="chatMessages"></div>
+  <div id="chatSuggestions"></div>
 
-        function startProductAutoPlay() {
-            clearInterval(productAutoPlayInterval);
-            productAutoPlayInterval = setInterval(() => {
-                scrollProductCarousel(1, true); // true = triggered by auto-play
-            }, 5000); // 5 seconds per slide
-        }
+  <div class="chat-input-wrap">
+    <input type="text" id="chatInput" class="chat-input"
+           placeholder="Ask about products, hours, location…"
+           onkeydown="if(event.key==='Enter')sendMsg()" />
+    <button class="chat-send" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
 
-        function pauseProductAutoPlay() {
-            clearInterval(productAutoPlayInterval);
-        }
+<!-- Scripts -->
+<script src="js/main.js"></script>
 
-        function scrollProductCarousel(direction, isAuto = false) {
-            const track = document.getElementById('productTrack');
-            if(!track) return;
-
-            // Determine scroll step based on device
-            // Mobile: scroll 1 item
-            // Desktop: scroll 3 items (entire page/view)
-            const isMobile = window.innerWidth < 768;
-            const itemsToScroll = isMobile ? 1 : 3;
-
-            // Item width 280px + gap 30px = 310px
-            const itemWidth = 310; 
-            const currentScroll = track.scrollLeft;
-            const maxScroll = track.scrollWidth - track.clientWidth;
-            
-            let nextScroll = currentScroll + (direction * itemWidth * itemsToScroll);
-
-            // Wrap around logic for auto-play
-            if (isAuto && direction === 1) {
-                // Tolerance of 10px to detect end
-                if (currentScroll >= maxScroll - 10) { 
-                    nextScroll = 0;
-                }
-            }
-
-            track.scrollTo({
-                left: nextScroll,
-                behavior: 'smooth'
-            });
-        }
-
-        // --- MODAL LOGIC ---
-        function openProductModal(type) {
-            const data = productData[type];
-            if(!data) return;
-
-            document.getElementById('modal-icon').innerHTML = data.icon;
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-desc').innerText = data.desc;
-            
-            const list = document.getElementById('modal-list');
-            list.innerHTML = data.items.map(item => `<li><i class="fas fa-check-circle"></i> ${item}</li>`).join('');
-
-            const extra = document.getElementById('modal-extra');
-            if (data.hasAI) {
-                extra.innerHTML = `<button onclick="openGardenAI()" class="text-xs font-bold text-green-700 uppercase tracking-widest hover:underline bg-green-50 px-4 py-2 rounded-full">✨ Ask Garden Expert</button>`;
-            } else {
-                extra.innerHTML = '';
-            }
-
-            document.getElementById('product-modal').style.display = 'flex';
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').style.display = 'none';
-        }
-
-        // --- MOBILE MENU LOGIC ---
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('mobile-menu-enter');
-        }
-
-        // --- LIGHTBOX LOGIC ---
-        function setupLightbox() {
-            const galleryImages = document.querySelectorAll(".gallery-img");
-            const lightbox = document.getElementById("lightbox");
-            const lightboxImg = document.getElementById("lightbox-img");
-
-            galleryImages.forEach(img => {
-                img.addEventListener("click", () => {
-                    lightbox.style.display = "flex";
-                    lightboxImg.src = img.src;
-                });
-            });
-
-            lightbox.addEventListener("click", () => {
-                lightbox.style.display = "none";
-            });
-        }
-
-        // --- LOCAL DATA FOR "AI" FEATURES (No API needed) ---
-        
-        const farmFacts = [
-            "<strong>Morning Symphony:</strong> Our day starts at 2 AM! We bathe and feed our cows with respect, even playing soothing music to keep them relaxed. Happy cows truly give the best milk. 🎶🐄",
-            "<strong>The Hen's Secret Job:</strong> Our powdered manure is unique - it's processed by hens! Our free-range birds scratch and aerate the drying cow dung, turning it into fine, bacteria-rich powder naturally. 🐔🌱",
-            "<strong>Free-Range Flavor:</strong> Our hens and ducks roam free in the rich farm soil and nearby paddy lands. Their natural diet of worms and greens makes our eggs nutrient-dense and delicious. 🥚✨",
-            "<strong>Rooted in Peace:</strong> We located our farm away from city chaos for a reason. The serene, rural atmosphere keeps our animals stress-free, which is the secret ingredient in all our products. 🌳🧘",
-            "<strong>Black Gold:</strong> We offer more than just milk! Our vermicompost and biogas slurry are chemical-free, nutrient-packed boosters for your home garden, made entirely from farm resources. ♻️🌻"
-        ];
-
-        const gardenTips = [
-            "<strong>Boost Soil Health:</strong> Our hen-processed cow dung is rich in beneficial bacteria. Mix it into your potting soil to improve aeration and natural nutrient absorption.",
-            "<strong>Vermicompost Power:</strong> Use our chemical-free vermicompost as a top dressing. It releases nutrients slowly, ensuring your plants stay fed without the risk of 'fertilizer burn'.",
-            "<strong>Liquid Gold:</strong> If you use our biogas slurry, dilute it with water! It's a potent, fast-acting booster that's perfect for leafy vegetables and flowering plants."
-        ];
-
-        async function callGemini(prompt, systemPrompt) {
-            // Placeholder for if/when API returns
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            // ... (API logic removed for now to save cost/errors)
-            return "Moo! I'm currently running on low power mode (offline).";
-        }
-
-        function showAIModal(title) {
-            document.getElementById('ai-modal').style.display = 'flex';
-            document.getElementById('ai-result').innerHTML = '';
-            document.getElementById('ai-loading').style.display = 'block';
-        }
-        function closeAIModal() { document.getElementById('ai-modal').style.display = 'none'; }
-
-        async function openGardenAI() {
-            closeProductModal(); 
-            showAIModal();
-            
-            // Local fallback logic
-            setTimeout(() => {
-                const randomTip = gardenTips[Math.floor(Math.random() * gardenTips.length)];
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-result').innerHTML = `<p class="text-lg leading-relaxed">${randomTip}</p>`;
-            }, 800);
-        }
-
-        async function generateFarmFact() {
-            showAIModal();
-            
-            // Local fallback logic
-            setTimeout(() => {
-                const randomFact = farmFacts[Math.floor(Math.random() * farmFacts.length)];
-                document.getElementById('ai-loading').style.display = 'none';
-                document.getElementById('ai-result').innerHTML = `<p class="text-lg leading-relaxed">${randomFact}</p>`;
-            }, 800);
-        }
-
-        // --- CHATBOT (Mini) & LOCAL KEYWORD LOGIC ---
-        function toggleChat() { 
-            document.getElementById('chat-widget').classList.toggle('open'); 
-            const hint = document.getElementById('chat-hint');
-            if(hint) hint.style.display = 'none'; // Hide hint once opened
-        }
-        function handleChatKey(e) { if(e.key === 'Enter') sendUserMessage(); }
-        function sendQuickMessage(msg) { document.getElementById('chat-input').value = msg; sendUserMessage(); }
-
-        // Local responses to run without AI
-        function handleLocalQuery(msg) {
-            const lowerMsg = msg.toLowerCase();
-            
-            if (lowerMsg.includes('where') || lowerMsg.includes('location') || lowerMsg.includes('address')) {
-                return `We are located at Chottanikkara, Kerala, India. <br><a href="https://maps.app.goo.gl/M7nPhFcKew258FET7" target="_blank" class="text-green-700 font-bold underline mt-1 inline-block"><i class="fas fa-map-marker-alt"></i> Get Directions on Maps</a> 📍`;
-            }
-            if (lowerMsg.includes('when') || lowerMsg.includes('time') || lowerMsg.includes('visit') || lowerMsg.includes('open')) {
-                return "You can visit us any day from 8:00 AM to 6:00 PM. ⏰";
-            }
-            if (lowerMsg.includes('product') || lowerMsg.includes('list') || lowerMsg.includes('buy')) {
-                return "We offer fresh Milk 🥛, Ghee, Curd, Eggs 🥚, Organic Manure 🌱, and Seasonal Veggies 🥕.";
-            }
-            if (lowerMsg.includes('how are you')) {
-                return "Moo! I'm fine, how about you? 🐮";
-            }
-            if (lowerMsg.includes('contact') || lowerMsg.includes('phone') || lowerMsg.includes('call') || lowerMsg.includes('email')) {
-                return `You can reach us here:<br>
-                        📞 <a href="tel:9567649770" class="text-green-700 font-bold underline">Call: 9567649770</a><br>
-                        💬 <a href="https://wa.me/9447819597" target="_blank" class="text-green-700 font-bold underline">WhatsApp Us</a><br>
-                        📸 <a href="https://www.instagram.com/dairygreenfarms" target="_blank" class="text-green-700 font-bold underline">Instagram</a>`;
-            }
-            if (lowerMsg.includes('price') || lowerMsg.includes('cost')) {
-                return `Prices vary by season! Please <a href="https://wa.me/9447819597" target="_blank" class="text-green-700 font-bold underline">WhatsApp us</a> for the latest rate card. 💰`;
-            }
-            if (lowerMsg.includes('hi') || lowerMsg.includes('hello') || lowerMsg.includes('hey')) {
-                return "Moo! I'm Mini, how may I help you? 🐮";
-            }
-            return null; // No match found
-        }
-
-        // Random fallback messages for unknown queries
-        function getRandomFallback() {
-            const fallbacks = [
-                "Moo! That is a bit beyond my current knowledge. Please contact the farm directly for more info! 🐮",
-                "I'm still learning! For detailed inquiries, it is best to call or WhatsApp us directly. 📞",
-                "I didn't quite catch that. Please reach out to our team at 9567649770 for a detailed answer.",
-                "I am here to help with basics, but for that query, please contact us via WhatsApp!",
-                "That sounds important! Please give us a call so we can help you better. 📱"
-            ];
-            return fallbacks[Math.floor(Math.random() * fallbacks.length)];
-        }
-
-        async function sendUserMessage() {
-            const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if(!msg) return;
-            
-            const chatBox = document.getElementById('chat-messages');
-            chatBox.innerHTML += `<div class="bg-green-100 p-3 rounded-br-xl rounded-l-xl shadow-sm text-sm text-green-900 self-end border border-green-200">${msg}</div>`;
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // 1. Try Local Keyword Match First
-            const localReply = handleLocalQuery(msg);
-            if (localReply) {
-                setTimeout(() => {
-                    chatBox.innerHTML += `<div class="bg-white p-3 rounded-bl-xl rounded-r-xl shadow-sm text-sm text-gray-700 self-start border border-gray-200">${localReply}</div>`;
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }, 500);
-                return;
-            }
-
-            // 2. Try AI, Fallback to Random Message on Error/Empty
-            // NOTE: API call is currently bypassed for stability/cost reasons.
-            // Using random fallback directly.
-            setTimeout(() => {
-                const fallbackMsg = getRandomFallback();
-                chatBox.innerHTML += `<div class="bg-white p-3 rounded-bl-xl rounded-r-xl shadow-sm text-sm text-gray-700 self-start border border-gray-200">${fallbackMsg}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
-        }
-
-        // Init
-        document.addEventListener("DOMContentLoaded", () => {
-            setupProductCarousel();
-            setupLightbox();
-            // Call setupDots for all 3 mobile carousels with default group size of 1
-            setupDots('gallery-scroll-container', 'gallery-dots', 16, 1);
-            setupDots('farmlife-scroll-container', 'farmlife-dots', 16, 1);
-            setupDots('values-scroll-container', 'values-dots', 24, 1);
-            centerCoreValues();
-        });
-
-        // --- GENERIC DOTS LOGIC ---
-        
-        // Added itemsPerDot parameter to allow grouping (e.g., 2 items = 1 dot)
-        function setupDots(containerId, dotsId, gap = 16, itemsPerDot = 1) {
-            const container = document.getElementById(containerId);
-            const dotsContainer = document.getElementById(dotsId);
-            if(!container || !dotsContainer) return;
-
-            // Get number of items
-            const itemCount = container.children.length;
-            const dotCount = Math.ceil(itemCount / itemsPerDot);
-
-            // Clear previous dots if any
-            dotsContainer.innerHTML = '';
-
-            // Create dots
-            for(let i=0; i<dotCount; i++) {
-                const dot = document.createElement('div');
-                dot.className = `dot ${i===0 ? 'active' : ''}`;
-                // Allow clicking dots to scroll
-                dot.onclick = () => {
-                    const itemWidth = container.children[0].offsetWidth + gap;
-                    container.scrollTo({
-                        left: i * itemsPerDot * itemWidth,
-                        behavior: 'smooth'
-                    });
-                };
-                dotsContainer.appendChild(dot);
-            }
-
-            // Use onscroll property instead of addEventListener to prevent stacking
-            container.onscroll = () => {
-                const scrollLeft = container.scrollLeft;
-                if (container.children.length === 0) return;
-                
-                const itemWidth = container.children[0].offsetWidth + gap; 
-                let rawIndex = Math.round(scrollLeft / itemWidth);
-                let activeDotIndex = Math.floor(rawIndex / itemsPerDot);
-                
-                // FIX: Check if we are at the very end of the scroll container
-                const isAtEnd = Math.abs((container.scrollWidth - container.clientWidth) - scrollLeft) < 10;
-                
-                if (isAtEnd) {
-                   activeDotIndex = dotCount - 1;
-                }
-                
-                const dots = dotsContainer.children;
-                for(let i=0; i<dots.length; i++) {
-                    if (dots[i]) {
-                        if(i === activeDotIndex) dots[i].classList.add('active');
-                        else dots[i].classList.remove('active');
-                    }
-                }
-            };
-        }
-
-        function centerCoreValues() {
-            // Only run on mobile (check if horizontal scroll is active/overflowing)
-            const container = document.getElementById('values-scroll-container');
-            if(!container) return;
-            
-            // Wait a moment for layout to settle
-            setTimeout(() => {
-                // If the container is scrollable horizontally
-                if (container.scrollWidth > container.clientWidth) {
-                    const items = container.children;
-                    if(items.length >= 2) {
-                        const middleItem = items[1]; // 0-indexed, so 1 is the 2nd item ("Love & Family")
-                        
-                        // Calculate center position
-                        // Item's left position - (half of screen width) + (half of item width)
-                        const scrollPos = middleItem.offsetLeft - (container.clientWidth / 2) + (middleItem.clientWidth / 2);
-                        
-                        container.scrollTo({
-                            left: scrollPos,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }, 100);
-        }
-    </script>
 </body>
 </html>
